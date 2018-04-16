@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 引入资源文件 -->
+	<properties resource="database.properties"></properties>
+	<!-- 加载文件 -->
+	<settings>
+		<!-- 配置log实现为LOG4J -->
+		<setting name="logImpl" value="LOG4J"></setting>
+		<!-- <setting name="autoMappingBehavior" value="PARTIAL"></setting> -->
+	</settings>
+	<typeAliases>
+		 <package name="cn.easybuy.entity"/> 
+	</typeAliases>
+	<environments default="development">
+		<environment id="development">
+			<!-- 事务管理 -->
+			<transactionManager type="JDBC"></transactionManager>
+			<!-- 外部引入式 -->
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}"></property>
+				<property name="url" value="${url}"></property>
+				<property name="username" value="${username}"></property>
+				<property name="password" value="${password}"></property>
+			</dataSource> 
+		</environment>
+	</environments>
+	<!-- 映射器 -->
+	<mappers>
+		<mapper resource="cn/easybuy/dao/user/UserMapper.xml"/>
+	</mappers>
+</configuration>

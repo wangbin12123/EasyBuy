@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.easybuy.dao.user.UserMapper">
+	<!-- 增加用户列表 -->
+	<insert  id="add" parameterType="User" >
+		insert into  easybuy_user(loginName,userName,password,sex,identityCode,email,mobile,type) 
+		values(#{loginName},#{userName},#{password},#{sex},#{identityCode},#{email},#{mobile},#{type})
+	</insert>
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="int">
+		delete from easybuy_user where id=#{id} 
+	</delete>
+	<!-- 修改用户 -->
+	<update id="update" parameterType="User">
+		update easybuy_user set loginName=#{loginName},userName=#{userName},sex=#{sex},identityCode=#{identityCode},email=#{email},mobile=#{mobile},type=#{type} where id=#{id}
+	</update>
+	<!-- 分页查询用户清单 -->
+	<select id="getUserList" parameterType="User">
+		select * from easybuy_user where 1=1 limit currentPageNo=#{currentPageNo},pageSize=#{pageSize};
+	</select>
+</mapper>

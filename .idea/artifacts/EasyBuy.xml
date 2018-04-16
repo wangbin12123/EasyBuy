@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="EasyBuy">
+    <output-path>$PROJECT_DIR$/out/artifacts/EasyBuy</output-path>
+    <root id="root">
+      <element id="library" level="project" name="lib" />
+      <element id="module-output" name="EasyBuy" />
+    </root>
+  </artifact>
+</component>
