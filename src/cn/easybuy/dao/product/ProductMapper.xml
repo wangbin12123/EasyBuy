@@ -39,6 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		 limit #{currentPageNo},#{pageSize}
 	 </where>
 	</select>
+	<!-- 商品数量 -->
 	<select id="queryProductCount" resultType="int">
 	 select count(*) count from easybuy_product where 1=1 
 	 <if test="name!=null and name!=''">

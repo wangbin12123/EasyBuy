@@ -31,6 +31,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	<mappers>
 		<mapper resource="cn/easybuy/dao/product/ProductMapper.xml"/>
 		<mapper resource="cn/easybuy/dao/user/UserMapper.xml"/>
+		<mapper resource="cn/easybuy/dao/news/NewsMapper.xml"/>
+		<mapper resource="cn/easybuy/dao/order/OrderMapper.xml"/>
+		<mapper resource="cn/easybuy/dao/order/OrderDetailMapper.xml"/>
 	</mappers>
-	
 </configuration>

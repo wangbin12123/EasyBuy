@@ -63,8 +63,8 @@
             <div class="top_slide_wrap">
                 <ul class="slide_box bxslider">
                     <li><img src="${ctx}/statics/images/ban1.jpg" width="740" height="401"/></li>
-                    <li><img src="${ctx}/statics/images/ban1.jpg" width="740" height="401"/></li>
-                    <li><img src="${ctx}/statics/images/ban1.jpg" width="740" height="401"/></li>
+                    <li><img src="${ctx}/statics/images/t0171d49fe8d2dd0656.jpg" width="740" height="401"/></li>
+                    <li><img src="${ctx}/statics/images/t01c4437492625d3f5e.jpg" width="740" height="401"/></li>
                 </ul>
                 <div class="op_btns clearfix">
                     <a href="#" class="op_btn op_prev"><span></span></a>

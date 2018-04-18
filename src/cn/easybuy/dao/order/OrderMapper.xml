@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.easybuy.dao.order.OrderMapper">
+	<!-- 添加订单 -->
+	<insert id="add" parameterType="Order">
+		insert into easybuy_order(userId,loginName,userAddress,createTime,cost,serialNumber) values(#{userId},#{loginName},#{userAddress},#{createTime},#{cost},#{serialNumber});
+	</insert>
+	<!-- 删除订单 -->
+	<delete id="delete" parameterType="Integer">
+		 delete from easybuy_order where id = #{id}
+	</delete>
+	<!-- 查询订单 -->
+	<select id="getOrderById" resultType="Order" parameterType="Integer">
+		 select * from easybuy_order where id = #{id}
+	</select>
+	<!-- 订单列表 -->
+	<select id="getOrderList" resultType="Order" >
+		select id,userId,loginName,userAddress,createTime,cost,serialNumber from easybuy_order
+		<where>
+			1=1
+			<if test="userId!=null">
+				and	userId=#{userId}
+			</if>	
+		</where>  
+		 limit #{currentPageNo},#{pageSize}	
+	</select>
+	<!-- 订单数目 -->
+	<select id="count" resultType="Integer" parameterType="Integer">
+		 select count(id) count from easybuy_order  where 1=1 and userId=#{userId}
+	</select>
+</mapper>
+	

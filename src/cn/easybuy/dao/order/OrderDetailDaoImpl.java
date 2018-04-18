@@ -93,7 +93,6 @@ public class OrderDetailDaoImpl extends BaseDaoImpl implements OrderDetailDao{
 		List<OrderDetail> orderDetailList = null;
 		List<Object> paramsList=new ArrayList<Object>();
 		StringBuffer sql = new StringBuffer(" select id,orderId,productId,quantity,cost FROM easybuy_order_detail where 1=1 ");
-		
 		if(EmptyUtils.isNotEmpty(orderId)){
 			sql.append(" and orderId=? ");
 			paramsList.add(orderId);

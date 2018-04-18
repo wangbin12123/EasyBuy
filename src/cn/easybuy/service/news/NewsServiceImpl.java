@@ -5,11 +5,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
+
 import cn.easybuy.dao.news.NewsDao;
 import cn.easybuy.dao.news.NewsDaoImpl;
+import cn.easybuy.dao.news.NewsMapper;
 import cn.easybuy.entity.News;
 import cn.easybuy.param.NewsParams;
 import cn.easybuy.utils.DataSourceUtil;
+import cn.easybuy.utils.MyBatisUtil;
 import cn.easybuy.utils.Pager;
 import cn.easybuy.utils.Params;
 
@@ -18,16 +22,18 @@ import cn.easybuy.utils.Params;
  */
 public class NewsServiceImpl implements NewsService {
 
-	public void deleteNews(String id) {// 删除新闻
-		Connection connection=null;
+	public boolean deleteNews(Integer id) {// 删除新闻
+		SqlSession session = null;
+		Integer count = 0;
 		try {
-			connection=DataSourceUtil.openConnection();
-			NewsDao newsDao = new NewsDaoImpl(connection);
-			newsDao.deleteById(Integer.parseInt(id));
+			session = MyBatisUtil.createSession();
+			count = session.getMapper(NewsMapper.class).deleteById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			DataSourceUtil.closeConnection(connection);
+		} finally {
+			MyBatisUtil.closeSession(session);
+			session.rollback();
+			return count>0;
 		}
 	}
 
@@ -46,29 +52,33 @@ public class NewsServiceImpl implements NewsService {
 		return news;
 	}
 
-	public void addNews(News news) {// 保存新闻
-		Connection connection = null;
+	public boolean addNews(News news) {// 保存新闻
+		SqlSession session = null;
+		Integer count = 0;
 		try {
-			connection = DataSourceUtil.openConnection();
-			NewsDao newsDao = new NewsDaoImpl(connection);
-			newsDao.add(news);
+			session = MyBatisUtil.createSession();
+			count = session.getMapper(NewsMapper.class).add(news);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
+			session.rollback();
+			return count>0;
 		}
 	}
 
-	public void updateNews(News news) {// 更新留言
-		Connection connection = null;
+	public boolean updateNews(News news) {// 更新留言
+		SqlSession session = null;
+		Integer count = 0;
 		try {
-			connection = DataSourceUtil.openConnection();
-			NewsDao newsDao = new NewsDaoImpl(connection);
-			newsDao.update(news);
+			session = MyBatisUtil.createSession();
+			count = session.getMapper(NewsMapper.class).update(news);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
+			session.rollback();
+			return count>0;
 		}
 	}
 

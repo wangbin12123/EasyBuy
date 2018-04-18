@@ -4,9 +4,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
+import org.apache.ibatis.session.SqlSession;
+
 import cn.easybuy.dao.order.*;
 import cn.easybuy.dao.product.ProductDao;
 import cn.easybuy.dao.product.ProductDaoImpl;
+import cn.easybuy.dao.product.ProductMapper;
 import cn.easybuy.utils.*;
 import cn.easybuy.entity.Order;
 import cn.easybuy.entity.OrderDetail;
@@ -75,7 +78,25 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getOrderList(Integer userId, Integer currentPageNo, Integer pageSize) {
-        Connection connection = null;
+        SqlSession session = null;
+        List<Order> orderList = new ArrayList<Order>();
+        List<OrderDetail> orderDetailList = new ArrayList<OrderDetail>();
+        try {
+            session = MyBatisUtil.createSession();
+            int total = count(userId);
+    		Pager pager = new Pager(total, pageSize, currentPageNo);
+			orderList=session.getMapper(OrderMapper.class).getOrderList(userId,(pager.getCurrentPage() - 1) * pager.getRowPerPage(),pager.getRowPerPage());
+			for (Order order : orderList) {
+				order.setOrderDetailList(session.getMapper(OrderDetailMapper.class).getOrderDetailList(order.getId()));
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            MyBatisUtil.closeSession(session);
+            session.rollback();
+            return orderList;
+        }
+    	/*Connection connection = null;
         List<Order> orderList = new ArrayList<Order>();
         try {
             connection = DataSourceUtil.openConnection();
@@ -90,23 +111,23 @@ public class OrderServiceImpl implements OrderService {
         } finally {
             DataSourceUtil.closeConnection(connection);
             return orderList;
-        }
+        }*/
     }
 
     @Override
     public int count(Integer userId) {
-        Connection connection = null;
+    	SqlSession session=null;
         Integer count=0;
         try {
-            connection = DataSourceUtil.openConnection();
-            OrderDao orderDao = new OrderDaoImpl(connection);
-            count=orderDao.count(userId);
+            session=MyBatisUtil.createSession();
+            count=session.getMapper(OrderMapper.class).count(userId);
         } catch (Exception e) {
             e.printStackTrace();
+            session.rollback();
         } finally {
-            DataSourceUtil.closeConnection(connection);
-            return count;
+        	 MyBatisUtil.closeSession(session);
         }
+        return count;
     }
 
     /**

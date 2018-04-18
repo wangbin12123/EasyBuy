@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.easybuy.dao.news.NewsMapper">
+	<!-- 添加新闻 -->
+	<insert  id="add" parameterType="News">
+		insert into easybuy_news(title,content,createTime)
+		values(#{title},#{content},#{createTime})
+	</insert>
+	<!-- 删除新闻 -->
+	<delete id="deleteById" parameterType="Integer">
+		delete from easybuy_news where id = #{id}
+	</delete>
+	<!-- 修改新闻 -->
+	<update id="update" parameterType="News">
+		update easybuy_news set title=#{title},content=#{content} where id=#{id}
+	</update>
+	<!-- 根据新闻id查询新闻 -->
+	<select id="getNewsById" parameterType="Integer" resultType="News">
+		select * from easybuy_news where id = #{id}
+	</select>
+	<!--查询新闻 -->
+	<select id="queryNewsList" resultType="News">
+	 select id,title,content,createTime FROM easybuy_news
+	 <where>
+		 1=1
+		 <if test="title!=null and title!=''">
+		  	and name title CONCAT('%',#{title},'%')
+		 </if>
+		 <if test="sort!=null">
+		   order by #{sort}
+		 </if>
+		 limit #{startIndex},#{pageSize}
+	 </where>
+	</select>
+	<!-- 新闻数量 -->
+	<select id="queryNewsCount" resultType="int">
+	 	select count(*) as count FROM easybuy_news 
+	 	<where>
+	 		<if test="title!=null and title!=''">
+		  		and name title CONCAT('%',#{title},'%')
+		 	</if>
+	 	</where>
+	</select>
+</mapper>

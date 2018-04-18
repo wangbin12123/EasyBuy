@@ -10,8 +10,9 @@ public interface NewsService{
 	/**
 	 * 保存新闻
 	 * @param news
+	 * @return 
 	 */
-	void addNews(News news);//保存新闻
+	boolean addNews(News news);//保存新闻
 	/**
 	 * 根据id查询新闻
 	 * @param parameter
@@ -21,8 +22,9 @@ public interface NewsService{
 	/***
 	 * 删除新闻
 	 * @param parameter
+	 * @return 
 	 */
-	void deleteNews(String parameter);
+	boolean deleteNews(Integer id);
 	/***
 	 * 查询新闻列表
 	 * @param param
