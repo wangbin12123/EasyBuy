@@ -17,7 +17,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		update easybuy_user set loginName=#{loginName},userName=#{userName},sex=#{sex},identityCode=#{identityCode},email=#{email},mobile=#{mobile},type=#{type} where id=#{id}
 	</update>
 	<!-- 分页查询用户清单 -->
-	<select id="getUserList" parameterType="User">
-		select * from easybuy_user where 1=1 limit currentPageNo=#{currentPageNo},pageSize=#{pageSize};
+	<select id="getUserList" resultType="User">
+		select * from easybuy_user
+		limit #{currentPageNo},#{pageSize}
 	</select>
+	<!-- 查询数量 -->
+	<select id="count" resultType="int">
+		select count(*) count from easybuy_user where 1=1
+	</select>
+	<!-- 根据id和登录名查询用户清单 -->
+	<select id="getUser" resultType="User">
+		select * from easybuy_user
+		<where>
+			<if test="id!=null">
+				id=#{id}
+			</if>
+			<if test="loginName!=null and loginName!=''">
+				AND loginName LIKE CONCAT('%',#{loginName},'%')
+			</if>
+		</where>
+	</select>
+	
 </mapper>

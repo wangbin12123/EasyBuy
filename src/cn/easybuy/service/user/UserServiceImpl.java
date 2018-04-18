@@ -82,24 +82,21 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUser(Integer userId, String loginName) {
-		Connection connection = null;
+		SqlSession session =null;
 		User user=null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			UserDao userDao = new UserDaoImpl(connection);
-			user=userDao.getUser(userId,loginName);
-		} catch (SQLException e) {
-			e.printStackTrace();
+			session = MyBatisUtil.createSession();
+			user=session.getMapper(UserMapper.class).getUser(userId,loginName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
 			return user;
 		}
 	}
 
 	@Override
-	public List<User> getUserList(Integer currentPageNo, Integer pageSize) throws SQLException {
+	public List<User> getUserList(Integer currentPageNo, Integer pageSize){
 		SqlSession session = null;
 		List<User> userList = new ArrayList<User>();
 		try {
@@ -114,21 +111,19 @@ public class UserServiceImpl implements UserService {
 			return userList;
 		}
 	}
+	
 
 	@Override
 	public int count() {
-		Connection connection = null;
-		Integer count=null;
+		Integer count=0;  //所影响的行数
+		SqlSession session = null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			UserDao userDao = new UserDaoImpl(connection);
-			count=userDao.count();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			session = MyBatisUtil.createSession();
+			count=session.getMapper(UserMapper.class).count();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
 			return count;
 		}
 	}

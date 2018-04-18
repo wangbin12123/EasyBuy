@@ -16,6 +16,7 @@
         <div class="m_right" id="content">
             <div class="mem_tit">用户列表</div>
             <p align="right">
+            	<input type="text" value="请输入需要查找的id或登录名"/><input type="button" value="搜索"/>
                 <a href="${ctx}/admin/user?action=toAddUser"  class="add_b">添加用户</a>
                 <br>
             </p>

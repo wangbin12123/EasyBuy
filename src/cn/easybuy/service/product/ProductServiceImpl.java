@@ -3,7 +3,12 @@ import java.sql.Connection;
 import java.util.List;
 import cn.easybuy.dao.product.ProductDao;
 import cn.easybuy.dao.product.ProductDaoImpl;
+import cn.easybuy.dao.product.ProductMapper;
 import cn.easybuy.utils.DataSourceUtil;
+import cn.easybuy.utils.MyBatisUtil;
+import cn.easybuy.utils.Pager;
+
+import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
 import cn.easybuy.entity.Product;
 /**
@@ -15,112 +20,121 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	public boolean add(Product product) {
-		Connection connection = null;
 		Integer count=0;
+		SqlSession session = null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			ProductDao productDao = new ProductDaoImpl(connection);
-			count=productDao.add(product);
-		} catch (Exception e) {
+			session = MyBatisUtil.createSession();
+			count = session.delete("cn.easybuy.dao.product.ProductMapper.add",product);
+			//count = session.getMapper(ProductMapper.class).add(product);
+			session.commit();
+		}catch(Exception e) {
 			e.printStackTrace();
-		} finally {
-			DataSourceUtil.closeConnection(connection);
+			session.rollback();
+		}finally {
+			MyBatisUtil.closeSession(session);
 			return count>0;
 		}
 	}
 
 	@Override
 	public boolean update(Product product) {
-		Connection connection = null;
 		Integer count=0;
+		SqlSession session = null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			ProductDao productDao = new ProductDaoImpl(connection);
-			count=productDao.update(product);
+			session = MyBatisUtil.createSession();
+			count=session.getMapper(ProductMapper.class).update(product);
+			session.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
+			session.rollback();
 			return count>0;
 		}
 	}
 
 	@Override
 	public boolean deleteProductById(Integer productId) {
-		Connection connection = null;
 		Integer count=0;
+		SqlSession session = null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			ProductDao productDao = new ProductDaoImpl(connection);
-			count=productDao.deleteProductById(productId);
+			session = MyBatisUtil.createSession();
+			count = session.delete("cn.easybuy.dao.product.ProductMapper.deleteProductById",productId);
+			//count=session.getMapper(ProductMapper.class).deleteProductById(productId);
+			session.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
+			session.rollback();
 			return count>0;
 		}
 	}
 
 	@Override
 	public Product getProductById(Integer productId) {
-		Connection connection = null;
+		SqlSession session = null;
 		Product product=null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			ProductDao productDao = new ProductDaoImpl(connection);
-			product=productDao.getProductById(productId);
+			session = MyBatisUtil.createSession();
+			product=session.getMapper(ProductMapper.class).getProductById(productId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
+			session.rollback();
 			return product;
 		}
 	}
 
 	@Override
 	public List<Product> getProductList(Integer currentPageNo,Integer pageSize,String proName, Integer categoryId, Integer level) {
-		Connection connection = null;
+		SqlSession session=null;
 		List<Product> productList=null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			ProductDao productDao = new ProductDaoImpl(connection);
-			productList=productDao.getProductList(currentPageNo,pageSize,proName,categoryId,level);
+			session=MyBatisUtil.createSession();
+			int total = count(proName,categoryId,level);
+			Pager pager = new Pager(total, pageSize, currentPageNo);
+			productList=session.getMapper(ProductMapper.class).getProductList((pager.getCurrentPage() - 1) * pager.getRowPerPage(), 
+					pager.getRowPerPage(), proName, categoryId, level);		
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 		} finally {
-			DataSourceUtil.closeConnection(connection);
-			return productList;
+			MyBatisUtil.closeSession(session);
+			session.rollback();
 		}
+		return productList;
 	}
 
 	@Override
 	public int count(String proName,Integer categoryId, Integer level) {
-		Connection connection = null;
-		Integer count=0;
+		SqlSession session=null;
+		int count=0;
 		try {
-			connection = DataSourceUtil.openConnection();
-			ProductDao productDao = new ProductDaoImpl(connection);
-			count=productDao.queryProductCount(proName,categoryId,level);
+			session=MyBatisUtil.createSession();
+			count=session.getMapper(ProductMapper.class).queryProductCount(proName, categoryId, level);		
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtil.closeConnection(connection);
-			return count;
+			MyBatisUtil.closeSession(session);
+			session.rollback();
 		}
+		return count;
 	}
 
 	@Override
 	public boolean updateStock(Integer productId, Integer stock) {
-		Connection connection = null;
+		SqlSession session=null;
 		Integer count=0;
 		try {
-			connection = DataSourceUtil.openConnection();
-			ProductDao productDao = new ProductDaoImpl(connection);
-			count=productDao.updateStock(productId,stock);
+			session=MyBatisUtil.createSession();
+			count=session.getMapper(ProductMapper.class).updateStock(productId, stock);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSession(session);
+			session.rollback();
 			return count>0;
 		}
 	}

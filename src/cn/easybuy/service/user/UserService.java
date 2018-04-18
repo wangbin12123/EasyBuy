@@ -14,7 +14,7 @@ public interface UserService {
 	
 	public User getUser(Integer userId,String loginName);
 	
-	public List<User> getUserList(Integer currentPageNo,Integer pageSize) throws SQLException;
+	public List<User> getUserList(Integer currentPageNo,Integer pageSize);
 	
 	public int count();
 }
