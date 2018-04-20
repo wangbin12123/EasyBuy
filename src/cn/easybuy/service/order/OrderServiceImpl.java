@@ -44,6 +44,7 @@ public class OrderServiceImpl implements OrderService {
             order.setCost(cart.getTotalCost());
             order.setSerialNumber(StringUtils.randomUUID());
             orderDao.add(order);
+            System.out.println(order.getId());
             //增加订单对应的明细信息
             for (ShoppingCartItem item : cart.getItems()) {
                 OrderDetail orderDetail = new OrderDetail();
@@ -83,9 +84,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDetail> orderDetailList = new ArrayList<OrderDetail>();
         try {
             session = MyBatisUtil.createSession();
-            int total = count(userId);
-    		Pager pager = new Pager(total, pageSize, currentPageNo);
-			orderList=session.getMapper(OrderMapper.class).getOrderList(userId,(pager.getCurrentPage() - 1) * pager.getRowPerPage(),pager.getRowPerPage());
+			orderList=session.getMapper(OrderMapper.class).getOrderList(userId,(currentPageNo-1)*pageSize,pageSize);
 			for (Order order : orderList) {
 				order.setOrderDetailList(session.getMapper(OrderDetailMapper.class).getOrderDetailList(order.getId()));
 			}
@@ -96,22 +95,6 @@ public class OrderServiceImpl implements OrderService {
             session.rollback();
             return orderList;
         }
-    	/*Connection connection = null;
-        List<Order> orderList = new ArrayList<Order>();
-        try {
-            connection = DataSourceUtil.openConnection();
-            OrderDao orderDao = new OrderDaoImpl(connection);
-            OrderDetailDao orderDetailDao=new OrderDetailDaoImpl(connection);
-            orderList = orderDao.getOrderList(userId, currentPageNo, pageSize);
-            for(Order order:orderList){
-            	order.setOrderDetailList(orderDetailDao.getOrderDetailList(order.getId()));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            DataSourceUtil.closeConnection(connection);
-            return orderList;
-        }*/
     }
 
     @Override
@@ -135,16 +118,16 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public List<OrderDetail> getOrderDetailList(Integer orderId) {
-        Connection connection = null;
+    	SqlSession session=null;
         List<OrderDetail> orderDetailList = new ArrayList<OrderDetail>();
         try {
-            connection = DataSourceUtil.openConnection();
-            OrderDetailDao orderDetailDao = new OrderDetailDaoImpl(connection);
-            orderDetailList = orderDetailDao.getOrderDetailList(orderId);
+        	 session=MyBatisUtil.createSession();
+            orderDetailList = session.getMapper(OrderDetailMapper.class).getOrderDetailList(orderId);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DataSourceUtil.closeConnection(connection);
+        	MyBatisUtil.closeSession(session);
+        	session.rollback();
             return orderDetailList;
         }
     }

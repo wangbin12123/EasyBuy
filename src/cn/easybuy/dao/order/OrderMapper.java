@@ -11,5 +11,5 @@ public interface OrderMapper {
 		public void delete(Integer id); 
 		public Order getOrderById(Integer id);
 		public List<Order> getOrderList(@Param("userId")Integer userId,@Param("currentPageNo")Integer currentPageNo,@Param("pageSize")Integer pageSize);
-		public Integer count(Integer userId);
+		public Integer count(@Param("userId")Integer userId);
 }

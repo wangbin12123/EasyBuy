@@ -11,6 +11,7 @@
 <div class="content mar_20" >
     <table border="0" class="car_tab" style="width:1200px; margin-bottom:50px;" cellspacing="0" cellpadding="0">
         <tr>
+        	<td class="car_th" width="100"> </td>
             <td class="car_th" width="200">商品名称</td>
             <td class="car_th" width="150">单价</td>
             <td class="car_th" width="150">购买数量</td>
@@ -19,10 +20,13 @@
         </tr>
         <c:forEach items="${sessionScope.cart.items}" var="temp">
             <tr>
-                <td>
-                    <div class="c_s_img">
+            	<td align="center">
+            		<div class="c_s_img">
                         <a href="${ctx}/Product?action=queryProductDeatil&id=${temp.product.id}"><img src="${ctx}/files/${temp.product.fileName}" width="73" height="73"/></a>
                     </div>
+            	</td>
+                <td align="center">
+                    
                         ${temp.product.name}
                 </td>
                 <td align="center" style="color:#ff4e00;">￥${temp.product.price}</td>
